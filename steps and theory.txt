@@ -1,0 +1,29 @@
+step-1. setting up the project, run (npm init)
+        it will generate a "package.json" file, it expects there should be an "index.js" file, so create it
+
+    to run the "index.js" file we can run it directly, but in the NodeJs ecosystem we can do it by changing 
+        the "scripts" in the "package.json" such as adding - 
+            "start", "dev", "or_any_name" and provide a command to run behind the scene when we run "npm run 
+                dev/start" which will be : "node index.js"
+
+step-2. just one or two lines above the line containing "script" in "package.json" go and add "module" inside 
+        the "type" IF YOU WANT TO USE THE "import/export" statements or IF YOU WANT TO USE THE "require()" 
+        syntax or statement use "commonjs"
+
+        now the basic of node project is initialised and setup
+
+step-3. now we need to add some common files so that if there are multiple developers working on the project 
+        , everything should be aligned for each one of them (such as it shouldn't be like a person is using 
+        2 spaces, another is using 4 spaces, one is using semicolons and another not, we need to get rid of 
+        it and everybody should follow the same rules)
+
+        So this means we have to use a common format for everybody working on the project,
+        for that we will be using "prettier"
+            1. first run "npm install --save-dev --save-exact prettier"
+            2. then "npx prettier . --write"
+            3. now write the default properties in the ".prettierrc" file
+
+        we need one more file ".prettierignore" because we do not want whole files to be formatted (such as 
+        node_modules and env files)
+
+step-4. initialising as git repository and making the ".gitignore" file
