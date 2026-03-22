@@ -1,0 +1,292 @@
+step-1. setting up the project, run (npm init)
+        it will generate a "package.json" file, it expects there should be an "index.js" file, so create it
+
+        to run the "index.js" file we can run it directly, but in the NodeJs ecosystem we can do it by 
+        changing the "scripts" in the "package.json" such as adding a script - 
+
+            "start", "dev", "or_any_name" and provide a command to run behind the scene when we run 
+                "npm run dev/start" which will be : "node index.js"
+
+step-2. just one or two lines above the line containing "script" in "package.json" go and add "module" inside 
+        the "type" IF YOU WANT TO USE THE "import/export" statements or IF YOU WANT TO USE THE "require()" 
+        syntax or statement use "commonjs"
+
+step-3. implementing "prettier"
+            1. first run "npm install --save-dev --save-exact prettier"
+            2. then "npx prettier . --write"
+            3. now write the default formatting properties in the ".prettierrc" file
+
+        we need one more file ".prettierignore" because we do not want whole files to be formatted (such as 
+        node_modules and env files)
+
+step-4. initialising as git repository and making the ".gitignore" file
+
+step-5. installing nodemon as dev dependency for "constant refresh" of the application.
+            
+        run (npm install --save-dev nodemon)
+
+        for this to work we have to change the "dev" "script" in the "package.json"
+
+step-6. now we want to hide our critical information or credentials
+
+        for that we have to install "dotenv" module
+        To use the "dotenv" package, make a ".env" file in the root or home directory of the project
+        After installing, we have to load or import "dotenv" at the very start of the "index.js"
+
+step-7. restructuring the project - 
+        
+        1. first have a "public" folder, which will be responsible for serving any file (such as images etc)
+            (cloudinary, AWS and other CDNs are also used for hosting images)
+        2. then a "src" (source) folder which has - 
+            i. "controllers" folder where all the logics/functions is written
+            ii. "db" folder which has the database operations
+            iii. "middleware", when a request comes and it reaches to the server, in between we want to do 
+                    some task
+            iv. "models", its the structure of how we are going to keep the data in the database
+            v. "routes" keeps all the routing information
+            vi. "utils/helpers" has the extra utilities (anything that can be reused)
+            vii. "validators" to validate the data
+
+        move the "index.js" inside the "src" folder (also change the address in the "scripts" inside 
+            "package.json")
+
+step-8. setting up "express" for routing - 
+            importing express and writing HTTP methods in "app.js" but listening to them in "index.js"
+
+step-9. using "Postman", its an API testing tool and also used for API development
+            We will be using it for handling the routes and for testing purposes
+
+step-10. Separating the "app.js" with "index.js"
+
+         the "index.js" file is the main entry point of the project, so it should not be dependent on 
+            express, database or any other thing
+        
+         So we will create a new file "app.js" inside the "src" folder and write all the express code there 
+            so that the index.js doesn't pile up with all of the code so we can keep it as short and as 
+            clean as possible
+
+step-11. before creating any routes, certain configurations need to be done such as - 
+            1. "app.use" acts as a middleware
+
+            using CORS package which provide "express" middleware that can be used to enable CORS
+                (we will import cors in the "app" and not in the "index" to keep it clean)
+
+step-12. standardizing the responses/error that come from the server - 
+            Standardizing means there should be a format (such as displaying status code, message, data) 
+            for the following responses/errors
+
+            the standardization of "errors" are already managed in the node ecosystem (Error() class 
+                is present there)
+         
+            but we have to design the standardization of "responses" on our own
+
+            adding all the responses/errors in a file "api-response.js", "api-error.js" in the "utils" folder
+
+step-13. creating "constants" file inside the "utils" folder so that a common and fixed syntax is followed 
+            all the time to prevent typing errors
+
+Applications can have database inside the server or outside the server
+This project will use an online database service (MongoDB Atlas)
+
+step-14. connecting to the database (MongoDB)
+            - the MongoDB url and password will be added in the "env" file
+
+            - create a file inside "db" folder as "index.js" and import "mongoose" there and write 
+                "connectDB()" method to connect to the database
+
+            - after creating the file, go to the MongoDB Atlas in the browser, and then create a free 
+                cluster, go to the project overview and click "connect" on that cluster and choose 
+                "compass" or "shell" as a connection method (compass is recommended)
+
+            - after that it will give a long URL known as "connection string", copy that but it is 
+                not usable right now and go and add the URL in the ".env" file, after pasting the URL 
+                you have to add a name of the database at the end of the string
+
+            - set the IP address in the network access as "0.0.0.0/0" so that anyone can have the 
+                access (its not a production setting, its a development setting)
+
+            - after that we need to have a database access as well, so create a new database user 
+
+NOTE - in the password, ONLY GIVE ALPHABETS AND NUMBERS, DO NOT GIVE SPECIAL CHARACTERS!!
+
+                Add "read and write in any database" as the "built-in role"
+                Now update this username, password in the URL that you pasted in the "env" file
+
+            - now modify the main entry file "index.js" as now it is connecting and listenining to the port,
+                but we only want it to listen to the port once it has connected to the database
+                
+                So for this import the connectDB method inside the index file
+
+Whenever you change something in the ".env" file, it doesn't auto reload the application, so you have to 
+kill the command and run it again
+
+step-15. now we work on the PRD
+    
+    We will plan our application into a couple of boxes such as - 
+        1. Controller - 
+            Inside this all the logic/functions of the application goes
+        2. Routes - 
+        3. app.js
+            As all the routes are finally imported/integrated in the app so that they can serve on any 
+                endpoint
+
+step-16. Writing "healthcheck" logic in the "healthcheck.controller.js" file and then wrapping it in the 
+            "async-handler" which is an higher order function
+
+        optimizing the "healthcheck" function so that we can avoid too many try-catches and another thing 
+            is that you can automatically catch any unhandled promise rejections, specially in the errors 
+            and pass them express's built in "error handler"
+
+        Writing a simple error handling utility in a file in the "utils" folder
+
+step-17. Writing the "userSchema"
+
+    Going to the "models" folder, because it is a place where you store the structure of the data (a schema 
+        of username, email, password etc.)
+    Create a new file "user.models.js" inside the "models" folder
+
+step-18. Working on the hooks (pre and post hooks and encryption of passwords)
+
+    Encryption is a loose term, rather it is one way encryption which cannot be decoded back, that is known 
+        "hashing"
+    Use "bcrypt" library for hashing the passwords (anything can be encrypted by "bcrypt")
+    Import "bcrypt" in "users.models.js" file and attach the hook to the schema
+    After that, use "pre-hooks" (write a method for that)
+
+    Now we have created a function to hash our password before the "save" operation, but if we change our 
+        username or avatar anytime then also on saving the details the pre-hook will run and hash the 
+        password and will be encrypted.
+    So you will not have the original password encryption, so we have to write a safeguarding operation 
+        that only change the password when you are touching the "password" field (means only when someone 
+        is registering for first time or resetting the password)
+
+
+step-19. if somebody is saving the password in the encrypted format so how will it be verified that the 
+            password entered in clear text format is exactly the same (whether its correct or incorrect)
+
+        So we will write a method named "isPasswordCorrect()" for this in the "users.models.js" file and 
+            attach it to the schema
+
+see about JSON Web Tokens (JWT) in the theory
+
+step-20. creating three tokens (two with-data and one without-data)
+            The "with-data" token are Access token and Refresh token.
+            
+            Adding information about tokens in the "env" file, such as - 
+                ACCESS_TOKEN_SECRET=test
+                ACCESS_TOKEN_EXPIRY=1d
+                REFRESH_TOKEN_SECRET=test
+                REFRESH_TOKEN_EXPIRY=10d
+
+            the library used to generate Access and Refresh token is "jsonwebtoken"
+            import "jwt" into "user.model.js" file and write code to generate access and refresh token
+
+            import "crypto" module of "NodeJs" to generate "without-data" token, these are temporary tokens 
+                which can be used for verifying a user or resetting a password
+
+step-21. writing email utilities for verifying a user
+
+    for user verification, you will send him an email and for this email we will generate tokens, but 
+        for delivering the tokens to the user email we need to write things to generate an email as 
+        well as send the email
+
+    for creating the emails we use libraries such as "mailgen" (it writes mails for us)
+    importing "mailgen" and writing code for "generating email" in "mail.js" file in "utils" folder
+
+    adding SMTP credentials from "mailtrap" in the "env" file
+    importing "nodemailer" and writing code for "sending email" in "mail.js" file in "utils" folder 
+    SENDING EMAIL IS ALWAYS ASYNC
+
+In the process of registering a user, we cannot go ahead and save the user details easily. First, we need 
+    to generate the Access, Refresh tokens and the temporary tokens and then we have to send the email to 
+    the user as well 
+
+step-22. working on registering a user 
+
+    creating a controller named "auth.controllers.js" and writing code for registering a user
+    for that import "User" from the "models" folder 
+                    "APIresponse" and "asyncHandler" from the "healthcheck.controller.js" file 
+                    "APIerror" from "api-error.js" 
+                    "sendEmail" from "mail.js" in "utils"
+
+step-23. creating routes - 
+    
+    - create "auth.routes.js" file in "routes" folder
+    - import the "registerUser" controller from the "contorllers" folder and write the route code
+    - then import this route into the "app.js" and also add the "app.use" code for it
+
+step-24. testing the router with postman - 
+
+    (also creating a structure for testing so that we can later on reuse this)
+        - create an "auth" folder in postman and create a new request "register"
+        - make this a "post" request and enter the URL
+        - inside the "Body" select "raw" and "json" and then save this setting
+        - for testing write an json object consisting of email, username, password and hit send
+
+step-25. writing validation for "register" operation - 
+    
+    before dircetly using "express-validator" there are three things which you need to work on - 
+        1. "middleware" - for calculating and passing all the errors to somebody
+            install "express-validator" and create a "validator.middleware.js" file in the "middleware" folder
+        2. "validation" - 
+            writing code in "index.js" file in "validators" folder
+        3. "routes" - 
+            the middleware as well as validator will go in the routes
+            write routes in "auth.routes.js", fisrt import the "validate" method from 
+                "validator.middleware.js" and "userRegisterValidator" from "validators" folder
+
+step-26. writing a login feature/controller - 
+
+    installing and importing "cookie-parser" in the "app.js" file, and adding "app.use(cookieParser())" 
+        for getting access to cookies
+    now writing controller for login in "auth.controller.js"
+    now set the route for login
+
+step-27. writing validation for "login" operation and testing it in postman - 
+
+    first we need to work on - 
+        1. "validation" - 
+            writing code in "index.js" file in "validators" folder
+        2. "routes" - 
+            write routes in "auth.routes.js", fisrt import the "validate" method from 
+                "validator.middleware.js" and "userLoginValidator" from "validators" folder
+
+    the testing process is same as that of "register"
+
+step-28. working on verificaiton of JWT also known as auth middleware - 
+
+    How does the access token reaches to the user/server?
+        1. directly by the cookies
+        2. in mobile apps it is transferred by a header (Authorization: Bearer <token>)
+
+    writing a middleware code in the "auth.middleware.js" file in the "middleware" folder
+    working of auth middleware - 
+        1. first we want to intercept the "request" made to the server in the middleware
+        2. we want to access the access token
+        3. and after accessing the token decode the information
+        4. once we have the information, we will append/inject this information in the "request"
+
+step-29. writing a controller for "logout" - 
+
+    write code in "auth.controller.js" add the route for it
+
+step-30. working on adding some values into database and removing them - 
+    
+    all the controller logic is written in "auth.controller.js" and routes in "auth.routes.js"
+
+    1. working on route "/current-user", its a "get" request
+    2. working on route "/verify-email/:verificationToken", its a "get" request
+        if you go to "mailtrap" and see the "verify yourself" button in email, then the link address 
+            of it contains a "token" at last...so we have to learn how to access the token value from 
+            the URL
+    3. working on route "/resend-email-verification", its a "post" request
+        maybe the user wasn't able to verify the email within the time limit
+    4. working on route "/refresh-token", its a "post" request
+        for refreshing the access token
+    5. working on route "/forgot-password", its a "post" request
+        the forgot password mechanism is that, you send an email, we check that whether you are in the 
+            database or not and we send you an email
+    6. working on route "/forgot-password", its a "post" request
+    7. working on route "/change-password", its a "post" request
+
+step-31. adding routes of all the above controllers - 

@@ -1,0 +1,266 @@
+-> In the real world industry, the first discussion happens on the backend and not on the frontend
+
+-> PRD is a Project Requirement Document which gives us the idea about what to build and what not to
+
+-> use "module" inside IF YOU WANT TO USE THE "import/export" statements or IF YOU WANT TO USE THE 
+    "require()" syntax or statement use "commonjs"
+
+-> Prettier code formatter is "opinionated". "Opinionated" simply means you can write a rule file and 
+    everybody in the project is going to follow those rules 
+
+        now we need to add some common files so that if there are multiple developers working on the project 
+        , everything should be aligned for each one of them (such as it shouldn't be like a person is using 
+        2 spaces, another is using 4 spaces, one is using semicolons and another not, we need everybody 
+        should follow the same rules) because when the code of different people is merged into the main 
+        branch of the repository it will create a problem/error.
+
+        The problem is that all of your files are going to look like they have been changed but in reality 
+        only some of them were changed
+
+-> what is the "constant refresh" problem?
+    the problem is that, that any change we make in the codefile we have to run our server again and 
+        again to see the changes, so we want that our server should refresh or restart automatically 
+        whenever some changes are made in the files
+
+    for this you can either use "nodemon" or "node --watch"
+
+    "nodemon" is a tool that helps develop Nodejs based applications by automatically restarting 
+        the node application when file changes in the directory are detected.
+
+    whenever we make application, there are 2 modes on which application is run, "dev" mode and "start" 
+        mode, "dev" mode is used for development and "start" is for the production server
+        On the production server we do not use nodemon because its a dev dependency, we use "node" there 
+        and in the "dev" we use "nodemon"
+
+-> what is "env"?
+
+    now we want to hide our critical information or credentials
+
+    if a client makes a request to the server, the computer which has the server application passes it 
+        the server and then server replies to the client, if all the information is contained inside the 
+        server app then there are chances that some of the information can get leaked, so for this another 
+        server has lot of security measures being implemented and some of the sensitive info is saved here 
+        , so whenever a server wants some sensitive info, it asks the secure server, it gets the info and 
+        the sensitive info is never stored in the server application
+
+    The secure information is known as "env"
+    for that we have to install "dotenv" module
+        This module loads environment variables from a ".env" file into "process.env"
+    To use the "dotenv" package, make a ".env" file in the root or home directory of the project
+
+    After importing "dotenv" in the entry app of the project there are 2 ways to use it - 
+        1.  (process.env.//)after putting a dot you can access any variable in that file
+        2.  dotenv.config({
+                path: "",
+            })
+            
+            the "config()" method takes an object as a parameter where we can provide the 
+                path of where the ".env" file is
+
+-> structuring/restructuring the project - 
+    every production level project have some kind of organization and a structure
+
+    for that, use (NestJs) framework which automatically enforces some folder structure for us, if you 
+        are not using any framework, you have to implement some folder structure for yourself
+    
+    1. first have a "public" folder, which will be responsible for serving any file (such as images etc)
+        (cloudinary, AWS and other CDNs are also used for hosting images)
+    2. then a "src" (source) folder which has - 
+        i. "controllers" folder where all the logics/functions is written
+        ii. "db" folder which has the database operations
+        iii. "middleware", when a request comes and it reaches to the server, in between we want to do 
+                some task
+        iv. "models", its the structure of how we are going to keep the data in the database
+        v. "routes" keeps all the routing information
+        vi. "utils/helpers" has the extra utilities (anything that can be reused)
+        vii. "validators" to validate the data
+
+NOTE - The "git" never preserves or stores any empty folder, so inside the "images" create a file (.gitkeep)
+
+-> There are two major components of any application - 
+    1. first is how the routing structure will work like, the web server
+    2. the other is the database and how we are going to interact with the database
+
+-> "Postman" is an API testing tool and also used for API development
+
+-> CORS(cross origin resource sharing) Error - 
+    it occurs when browser is expecting that the frontend and 
+    backend are hosted on the same machine even though they are present on different machine and 
+    even in different regions, and it is the default feature of the "browser" that it doesn't allow 
+    cross origin resource sharing and due to this it doesn't allow the frontend to communicate with 
+    the backend.
+    This error can only be handled by backend and a person who works on the backend
+
+-> "Health check API" 
+    It monitors the system status, most of the applications when you throw them on AWS etc they need to 
+        constantly check whether the application is running in the healthy status or not and for these 
+        things, health check APIs are designed
+
+    "/api/v1/healthcheck" we want to have a "get" request on this endpoint and we will be able to get a 
+        system health status as response
+
+-> a "higher order function" is a function which takes another function as an input and gives a function 
+    as an output
+
+-> Authentication simply means we will have a user, and store some data about them in the database (and 
+        providing functionalities such as register, login, logout etc.)
+    All the login details goes to the server, it is processed there and stored into the database
+
+-> Whenever you are writing a "Schema" (eg. "User"), once it goes to the MongoDB it automatically gets 
+        converted into lowercase ("user") and plural form ("users")
+
+-> Schema is a method which takes an object in which you define all the fields such as username, email, 
+        pass... the first object is all the fields and second object is the time stamps
+
+-> A schema comprises of some schema, "methods" as well as "hooks"
+    Mongoose also helps in designing schema
+
+-> In a schema there are lot of fields and in each field you want to save some data, so everything will 
+        revolve aroung saving the data, but when you are saving the data there are some things that you want 
+        to do just before the saving (pre-hooks) and just after the saving (post-hooks)
+    So one of the thing we want to do is encrypt out password, so if we send a password to pre-hook, it can 
+        encrypt the data
+    Encryption is a loose term, rather it is one way encryption which cannot be decoded back, that is known 
+        "hashing"
+
+    for "hashing" you need to provide two things - 
+        1. the data you want to hash
+        2. and how many rounds of hashing algo you want to apply
+
+-> If we are giving the exact same password as the one which is stored in the database then the hash 
+        will be exactly same, so if the hash of the saved password matches or is exactly same to 
+        the entered password then we can say that the password is correct
+
+    We do not have to write a algorithm for this, the "bcrypt" actually does it behind the scene, but 
+        this kind of mechanism whether your password is same or not should actually be a part of 
+        schema itself rather than the "controller" logic
+
+-> What are JSON Web Tokens (JWT) ?
+
+    This is a very standard approach of authenticating any user, and making sure it stays authenticated
+
+    If we have a client and a web server, the client will be making many requests to the server (such 
+        as you made a request and got a response and after some time again made a request and got 
+        a response) but for each of the request that you sent, you need some kind of authentication 
+        continuously that you are a registered user in our database and we would like to respond you 
+        back, and if at any time you are not logged in or validated then you will not get any response 
+        and will be asked to log in again.
+
+    The mechanism to prove that you are a logged in user (we can store some cookies, but just storing 
+        them would not make you an authorised user), this is where a long string comes and with every 
+        single request you have to send this string or token also known as "JWT" to prove that you are 
+        a valid user
+
+    Format of JWT (xxxxx.yyyyy.zzzzz) - 
+        1. "header" - it comprises of 2 things, algorithm and the type
+                {
+                    "alg": "HS256",
+                    "type": "JWT"
+                }
+        2. "payload" - This is the information that we can pass on but it is not directly passed on, first 
+                it is encrypted then passed on (any information such as username, id, email etc)
+        3. "signature" - 
+
+    To do that we send an "header information" known as "Authorization" which has a keyword "Bearer" 
+        and a space after that is the token. (Authorization: Bearer <token>)
+    Go to postman, click on "Headers", add "Authorization" as the key and "Bearer <token>" is its value
+
+-> Tokens are just a long string
+
+    There are two types of token - 
+        1. with data (data can be id, email etc) - 
+
+            This type of token also have to types - 
+                they are generated in exactly same way and the way you use them is also exactly same, only 
+                    difference is of their time of expiry - 
+                1. Access tokens - they are short lived tokens, just for few minutes
+                2. Refresh tokens - they are long lived, for a few days
+
+                the refresh token has less information(payload) than access token because it is used less, 
+                    access token is used a lot
+
+            We create two tokens inside the server (access and refresh), the Access token acts as a key 
+                that as long as you have it you are a valid user, so the Access token +  Refresh 
+                token goes to the client and the Refresh token is also saved in the database 
+                (the copy of Access tokens are never stored in the database, they are stateless), 
+                anyone who has the Access token is allowed to use the application, it is called as 
+                authenticated user.
+
+                Every single request that you send to the server, it is compulsory that you are going to 
+                send me a copy of this access token and based on the checking of the access token you 
+                get a response
+                Since Access tokens are short lived, there might be cases that you sent a web request and 
+                the access token has expired and in that case you get logged out and you have to log in 
+                again.
+                There is another mechanism that happens when Access tokens have expired, the client is 
+                sent an special response of a error saying timed out, so we design the frontend just like 
+                this that you send a message to the server with the "Refresh token" from the client side 
+                and if this refresh token matches up then it issues a new access token and gives it to the 
+                user
+
+            JWTs are data attached or with data tokens
+
+            Access tokens and Refresh tokens are all JWT tokens
+
+        2. without data - 
+
+            creating it is simple, just generate a long string with random characters
+
+            they are used majorly for things which needs to be done just one time, 
+                for example you need to verify a user, so you send a token to the user and also keep it 
+                with yourself in the database as well and if the person sends the exact same string that's it
+
+                there are two copies of token being made, one is sent to the user and another is kept in 
+                the database, now when the user makes a request he sends this token and the server looks into 
+                the database and if both the tokens matches then the user is termed as verified/validated 
+                and he further has the access to further actions
+
+-> steps of registering a user - 
+    1. take some data
+    2. validate the data
+    3. check in DB if user already exists
+    4. save the user data (the process involves - generating the Access, Refresh and the temporary tokens 
+            and then we have to send the email to the user as well)
+    5. verify the user
+
+-> for sending an email, there are two types of email - 
+        1. production email - 
+            for this you can use services like "AWS SES" (simple email service) or "Brevo", these are 
+                production grade services (DO NOT USE GMAIL OR YAHOO! because they aren't meant for 
+                these kinds of email)
+            In the development environment, these emails are sent on some XYZ account and you don't get 
+                to see that email
+        2. development email - 
+            for these there are some test platforms in which the email is sent to your inbox only so 
+                that you can see the emails
+            "Mailtrap" is one such service for this
+
+-> steps of logging in a user - 
+    1. take some data
+    2. validate the data
+    3. check in DB if user already exists
+    4. if the user exists then check if the password is correct
+    5. if the password is correct then we want to generate tokens
+    6. now send tokens in cookies as well (there are no cookies in mobile apps)
+
+    if we are going through this route, there is a problem that "express" don't have cookies access 
+        directly
+    so we have to bring in a package known as "cookie-parser" so that cookies are accessible
+
+-> what is auth middleware?
+
+    We have a client and a server, and in the server there are so many controllers been written and as soon 
+        as the request goes to the server you also send some data along with it (such as access token). So 
+        with every request the access token should be sent, this is such a common thing that's happening 
+        that we should make it as a separate code...
+
+    For eg, there are multiple controller files which are checking that whether you have access token, 
+        so do you want multiple files checking or only one file should check this?
+
+    So for only one file to check for the access token, before the user request reaches to the server 
+        or the controllers we will write a middleware on the request that will check for the token
+    Now none of the multiple controllers present there will have to check for the token
+
+-> we do not execute middlewares, we just pass a reference of it
+
+-> middlewares usually never send a good response, they just transfer the information to the controllers
